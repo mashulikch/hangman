@@ -4,13 +4,6 @@
 
 echo 'Running acceptance tests...'
 
-export CI_PROJECT_NAME="$1"
-export DOCKERFILE="$2"
-
-tag="$CI_PROJECT_NAME"
-echo "Building Docker image hangman:$tag"
-docker build -f "$DOCKERFILE" . -t hangman:"$tag"
-
 testNumber=0
 failedTests=0
 
@@ -61,7 +54,7 @@ runTest() {
   word1=$(echo "$3" | cut -d ' ' -f 1)
   word2=$(echo "$3" | cut -d ' ' -f 2)
   expected=$(echo "$3" | cut -d ' ' -f 3)
-  actual=$(docker run --rm --memory=256m --cpus=1 hangman:"$tag" "$word1" "$word2")
+  actual=$(dotnet run --project ./src/Hangman.csproj "$word1" "$word2")
   assertResultEquals "$actual" "$expected"
   testNumber=$((testNumber + 1))
 }

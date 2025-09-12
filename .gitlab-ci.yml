@@ -3,9 +3,9 @@ include:
 
 stages:
   - pre
-  - acceptance
   - build
   - validate
+  - acceptance
 
 show_variables:
   stage: pre
@@ -14,14 +14,11 @@ show_variables:
 
 .acceptance_test:
   stage: acceptance
-  image: docker
-  services:
-    - name: docker:dind
-      alias: docker
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master"
       when: always
       allow_failure: false
     - when: never
   script:
-    - sh scripts/test.sh $CI_PROJECT_NAME $DOCKERFILE
+    - sh scripts/test.sh
