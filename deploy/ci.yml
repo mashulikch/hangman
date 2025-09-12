@@ -1,4 +1,4 @@
-image: dotnet/sdk:8.0
+image: mcr.microsoft.com/dotnet/sdk:8.0
 
 acceptance_test_dotnet:
   extends: .acceptance_test
