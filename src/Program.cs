@@ -12,7 +12,7 @@ class Program
         // Установка правильной кодировки для корректной работы с русскими символами в консоли
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
-        
+
         // Выбор режима запуска: интерактивный или неинтерактивный
         if (args.Length == 2)
         {

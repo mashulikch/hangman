@@ -72,7 +72,7 @@ public class HangmanASCII
         "/ \\  |\n" +
         "====="
     };
-    
+
     /// <summary>
     /// Печатает ASCII-артистическую виселицу по количеству ошибок
     /// </summary>

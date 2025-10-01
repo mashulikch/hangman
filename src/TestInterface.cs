@@ -19,7 +19,9 @@ public class TestInterface
 
         var engine = new HangmanEngine(word);
         for (int i = 0; i < guess.Length; i++)
+        {
             engine.Guess(guess[i]);
+        }
 
         var state = engine.GetCurrentState();
         var result = (state == word) ? "POS" : "NEG";

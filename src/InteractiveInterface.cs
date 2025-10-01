@@ -15,7 +15,7 @@ public abstract class InteractiveInterface
     {
         var rand = new Random();
         var allCategories = new List<string>(Dictionary.WordsByCategoryDifficulty.Keys);
-        var allDifficulties = new List<string>{ "Лёгкий", "Средний", "Сложный" };
+        var allDifficulties = new List<string> { "Лёгкий", "Средний", "Сложный" };
 
         string chosenCategory;
         string chosenDifficulty;
@@ -24,7 +24,7 @@ public abstract class InteractiveInterface
         Console.WriteLine("Выберите категорию, написав число (или Enter для случайной):");
         for (int i = 0; i < allCategories.Count; i++)
         {
-            Console.WriteLine($"{i+1}. {allCategories[i]}");
+            Console.WriteLine($"{i + 1}. {allCategories[i]}");
         }
 
         var categoryInput = Console.ReadLine();
@@ -47,7 +47,7 @@ public abstract class InteractiveInterface
         Console.WriteLine("Выберите сложность, написав число (или Enter для случайной):");
         for (int i = 0; i < allDifficulties.Count; i++)
         {
-            Console.WriteLine($"{i+1}. {allDifficulties[i]}");
+            Console.WriteLine($"{i + 1}. {allDifficulties[i]}");
         }
 
         var difficultyInput = Console.ReadLine();
@@ -87,7 +87,7 @@ public abstract class InteractiveInterface
             HangmanASCII.Print(engine.Errors);
             Console.WriteLine(engine.GetCurrentState());
             Console.WriteLine($"Попыток осталось: {maxErrors - engine.Errors}");
-            if( maxErrors - engine.Errors < maxErrors / 2)
+            if (maxErrors - engine.Errors < maxErrors / 2)
             {
                 Console.WriteLine(Dictionary.GetWordHint(word));
             }
