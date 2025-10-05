@@ -30,7 +30,7 @@ public abstract class InteractiveInterface
         var categoryInput = Console.ReadLine();
         if (string.IsNullOrWhiteSpace(categoryInput))
         {
-            chosenCategory = allCategories[rand.Next(allCategories.Count)];
+            chosenCategory = Dictionary.GetRandomCategory(rand);
             Console.WriteLine($"Случайно выбрана категория: {chosenCategory}");
         }
         else if (int.TryParse(categoryInput, out int catNum) && catNum >= 1 && catNum <= allCategories.Count)
@@ -39,7 +39,7 @@ public abstract class InteractiveInterface
         }
         else
         {
-            chosenCategory = allCategories[rand.Next(allCategories.Count)];
+            chosenCategory = Dictionary.GetRandomCategory(rand);
             Console.WriteLine($"Некорректно, случайно выбрана категория: {chosenCategory}");
         }
 
@@ -66,7 +66,7 @@ public abstract class InteractiveInterface
             Console.WriteLine($"Некорректно, случайно выбрана сложность: {chosenDifficulty}");
         }
 
-        int maxErrors = chosenDifficulty switch
+        var maxErrors = chosenDifficulty switch
         {
             "Лёгкий" => 7,
             "Средний" => 6,
@@ -76,30 +76,42 @@ public abstract class InteractiveInterface
 
         var (word, hint) = Dictionary.GetRandomWord(rand, chosenCategory, chosenDifficulty);
         var engine = new HangmanEngine(word, maxErrors);
-
-        Console.WriteLine(Dictionary.GetCategoryAndDifficulty(chosenCategory, chosenDifficulty));
+        
+        Console.WriteLine($"Категория: {chosenCategory}, сложность: {chosenDifficulty}.");
         Console.WriteLine($"У вас максимум {maxErrors} ошибок.");
-
+        int threshold = (maxErrors + 1) / 2;
         // Основной игровой цикл
         while (!engine.GameOver)
         {
             // Отрисовка состояния, обработка ошибок, показ подсказки и т.д
-            HangmanASCII.Print(engine.Errors);
+            HangmanAscii.Print(engine.Errors, maxErrors);
             Console.WriteLine(engine.GetCurrentState());
             Console.WriteLine($"Попыток осталось: {maxErrors - engine.Errors}");
-            if (maxErrors - engine.Errors < maxErrors / 2)
+            
+            if (maxErrors - engine.Errors <= threshold)
             {
-                Console.WriteLine(Dictionary.GetWordHint(word));
+                Console.WriteLine($"Подсказка: {hint}");
             }
+            
             Console.Write("Введите букву: ");
             var input = Console.ReadLine();
+            
             if (string.IsNullOrWhiteSpace(input) || input.Length != 1 || !input.All(IsCyrillic))
             {
                 Console.WriteLine("Введите одну русскую букву!");
                 continue;
             }
-            engine.Guess(input[0]);
+            char ch = char.ToLower(input[0]);
+
+            if (engine.HasTried(ch))
+            {
+                Console.WriteLine("Эта буква уже использована");
+                continue;
+            }
+
+            engine.Guess(ch);
         }
+        
         // Итоговое сообщение пользователю — победа или поражение
         if (engine.IsWon)
         {
@@ -107,11 +119,12 @@ public abstract class InteractiveInterface
         }
         else
         {
-            HangmanASCII.Print(engine.Errors);
+            HangmanAscii.Print(engine.Errors, maxErrors);
             Console.WriteLine($"Вы проиграли! Слово было: {word}");
         }
     }
-    public static bool IsCyrillic(char c)
+
+    private static bool IsCyrillic(char c)
     {
         return (c >= '\u0400' && c <= '\u04FF') || // Основная кириллица
                (c >= '\u0500' && c <= '\u052F');   // Дополнительная кириллица

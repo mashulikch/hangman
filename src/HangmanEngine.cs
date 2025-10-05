@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+namespace Hangman;
+
 /// <summary>
 /// Логика игровой сессии "Виселица": хранит состояние игры, обрабатывает ввод игрока
 /// </summary>
@@ -28,13 +30,18 @@ public class HangmanEngine
     /// </summary>
     public bool Guess(char letter)
     {
-        letter = Char.ToLower(letter);
-        if (secretWord.Contains(letter))
+        letter = char.ToLower(letter);
+        if (guessedLetters.Contains(letter))
         {
-            guessedLetters.Add(letter);
-            return true;
+            return false;
         }
         guessedLetters.Add(letter);
+        
+        if (secretWord.Contains(letter))
+        {
+            return true;
+        }
+        
         Errors++;
         return false;
     }
@@ -46,4 +53,6 @@ public class HangmanEngine
     {
         return new string(secretWord.Select(c => guessedLetters.Contains(c) ? c : '*').ToArray());
     }
+    
+    public bool HasTried(char letter) => guessedLetters.Contains(char.ToLower(letter));
 }
